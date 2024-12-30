@@ -45,7 +45,7 @@ def create_contact(request):
         context = {'contact': contact}
         response = render(request, 'partials/contact-row.html', context)  
         response['HX-Trigger'] = 'success'  
-        return response
+        return response 
     else:
         response = render(request, 'partials/add-contact-modal.html', {'form': form})
         response['HX-Retarget'] = '#contact_modal'
