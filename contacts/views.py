@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.views.decorators.http import require_http_methods
 
 from contacts.forms import ContactForm
+from contacts.models import Contact
 
 @login_required
 def index(request):
@@ -52,3 +54,13 @@ def create_contact(request):
         response['HX-Reswap'] = 'outerHTML'
         response['HX-Trigger-After-Settle'] = 'fail'
         return response
+    
+
+@login_required
+@require_http_methods(['DELETE'])
+def delete_contact(request, pk):
+    contact = get_object_or_404(Contact, pk=pk, user=request.user)
+    contact.delete()
+    response = HttpResponse(status=204)
+    response['HX-Trigger'] = 'contact-deleted'
+    return response
